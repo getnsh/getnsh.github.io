@@ -105,10 +105,10 @@ img{max-width:100%; display:block;}
 @media(max-width:760px){ :root{--bezel:7px;} }
 
 /* -- Nav ------------------------------------------------------- */
-nav{position:sticky; top:var(--bezel); z-index:50; background:rgba(15,13,20,.94);
+nav{position:sticky; top:var(--bezel); z-index:50;  background:rgba(15,13,20,.94);
   backdrop-filter:blur(6px); border-bottom:1px solid var(--outline);}
 .navin{max-width:1000px; margin:0 auto; padding:16px 26px;
-  display:flex; align-items:center; gap:14px;}
+  display:flex; align-items:center; gap:14px; position:relative;}
 .navin img{width:26px;height:26px; image-rendering:pixelated;}
 .navin .nm{font-size:14px; letter-spacing:.2em; color:var(--accent);}
 .navlinks{margin-left:auto; display:flex; gap:20px; align-items:center;}
@@ -177,6 +177,32 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--ok); outline-offset
   text-transform:uppercase; margin-top:9px;}
 .stat .d{font-size:11px; color:var(--spent); margin-top:12px; line-height:1.85;}
 
+/* the chassis ticker: in the app it scrolls the day's status, here it
+   reads out the section you are in as you scroll */
+.ticker{font-size:9px; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--muted); margin-left:18px; white-space:nowrap; overflow:hidden;
+  transition:opacity .2s ease;}
+@media(max-width:880px){ .ticker{display:none;} }
+
+/* the sound switch, drawn as the app's own toggle */
+.snd{width:34px; height:22px; padding:0; border:2px solid var(--outline);
+  background:var(--card); cursor:pointer; position:relative; flex:none;}
+.snd span{position:absolute; top:2px; left:2px; width:14px; height:14px;
+  background:var(--muted); transition:left .18s var(--warp), background .18s ease;}
+.snd[aria-pressed="true"]{border-color:var(--accent); background:rgba(185,140,255,.18);}
+.snd[aria-pressed="true"] span{left:14px; background:var(--accent);}
+
+/* a hairline progress rail, the deck indicator stretched across the page */
+.rail{position:absolute; left:0; bottom:-1px; height:2px; background:var(--accent);
+  width:0; box-shadow:0 0 8px rgba(185,140,255,.5);}
+
+/* the cue board */
+.cues{display:flex; flex-wrap:wrap; gap:9px; margin-top:26px;}
+.cue{--fill:var(--card); --bw:2px; padding:12px 15px; border:0; cursor:pointer;
+  font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--soft);
+  transition:color .16s ease;}
+.cue:hover{color:var(--bright);}
+.cue.hit{background:var(--accent);}
 /* -- THE PHONE ------------------------------------------------
    The app rebuilt in markup rather than screenshotted. A downsampled
    PNG is soft on any retina screen and unreadable at this size; this
@@ -540,13 +566,17 @@ body.anim .warp.in{opacity:1; transform:none; filter:none;}
   <div class="navin">
     <img id="navicon" alt="">
     <span class="nm">DEFICIT</span>
+    <span class="ticker" id="ticker" aria-hidden="true">ready</span>
     <div class="navlinks">
       <a href="#what" class="hide">what it is</a>
       <a href="#engine" class="hide">the engine</a>
       <a href="#protocol" class="hide">protocol</a>
       <a href="#safe" class="hide">privacy</a>
+      <button id="snd" class="snd" aria-pressed="true"
+              aria-label="Toggle sound"><span></span></button>
       <a href="#get" class="bb cta">get it</a>
     </div>
+    <div class="rail" id="rail"></div>
   </div>
 </nav>
 
@@ -828,8 +858,38 @@ body.anim .warp.in{opacity:1; transform:none; filter:none;}
   break. The only number that matters is a total that cannot go down.</p>
 </section>
 
+<section id="sound">
+  <div class="eyebrow">07 &mdash; the console layer</div>
+  <h2>It sounds like the machine it pretends to be</h2>
+  <p style="margin-top:20px">Every cue in the app is synthesised from scratch &mdash;
+  square waves with a duty cycle for the pulse voice, a triangle for the bass, and a
+  15-bit shift register for noise, the way a 2D console did it. No samples. The whole
+  set is 212&nbsp;KB.</p>
+  <p>The envelopes are linear because that hardware could not do anything smoother, and
+  the abruptness is most of the character. These are the real ones, generated in your
+  browser from the same recipe the app ships.</p>
+
+  <div class="cues">
+    <button class="bb cue" data-cue="tap">tap</button>
+    <button class="bb cue" data-cue="select">select</button>
+    <button class="bb cue" data-cue="log">log a set</button>
+    <button class="bb cue" data-cue="promote">promotion</button>
+    <button class="bb cue" data-cue="complete">session done</button>
+    <button class="bb cue" data-cue="rest_done">rest over</button>
+    <button class="bb cue" data-cue="refuse">refused</button>
+    <button class="bb cue" data-cue="unlock">milestone</button>
+    <button class="bb cue" data-cue="boot">boot</button>
+    <button class="bb cue" data-cue="drum">drum</button>
+  </div>
+
+  <p class="note">Nothing plays over your music: the audio session is
+  <strong>ambient</strong>, so the app mixes rather than interrupts and always obeys the
+  silent switch. A gym app that talks over the headphones at 05:10 gets muted permanently
+  on the first offence.</p>
+</section>
+
 <section id="safe">
-  <div class="eyebrow">07 &mdash; safe by construction</div>
+  <div class="eyebrow">08 &mdash; safe by construction</div>
   <h2>It cannot send your data anywhere</h2>
   <p style="margin-top:20px">This is not a privacy policy, it is an architecture.
   There is no networking code in the app. On Android it does not hold the
@@ -855,7 +915,7 @@ body.anim .warp.in{opacity:1; transform:none; filter:none;}
 </section>
 
 <section id="get">
-  <div class="eyebrow">08 &mdash; getting it</div>
+  <div class="eyebrow">09 &mdash; getting it</div>
   <h2>Installing</h2>
   <div class="warp grid g2">
     <div class="bb panel">
@@ -885,7 +945,7 @@ body.anim .warp.in{opacity:1; transform:none; filter:none;}
 </section>
 
 <section id="limits">
-  <div class="eyebrow">09 &mdash; being straight with you</div>
+  <div class="eyebrow">10 &mdash; being straight with you</div>
   <h2>What this is not</h2>
   <div class="bb no">
     <ul>
@@ -950,6 +1010,198 @@ body.anim .warp.in{opacity:1; transform:none; filter:none;}
   });
 })();
 
+
+/* ===================================================================
+   THE CONSOLE LAYER
+
+   A port of the app's own synthesiser (deficit-design/chip.py) to
+   WebAudio -- square, triangle and a 15-bit LFSR for noise, linear
+   envelopes because that hardware could not do anything smoother and
+   the abruptness is most of the character. Same notes, same duty
+   cycles, same durations as the WAVs the app ships. No audio files.
+
+   Two rules the browser imposes and one imposed here:
+   - No audio may start before a gesture, so the context is created on
+     the first one and the boot cue plays at that moment. That IS the
+     power-on, as close to "on arrival" as a browser permits.
+   - The choice is remembered, and the toggle is always visible.
+   - Anything that throws leaves the page working in silence.
+   =================================================================== */
+const Sound = (function(){
+  const N = {C3:130.81,C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392.0,A4:440.0,
+             A3:220.0,C5:523.25,D5:587.33,E5:659.25,F5:698.46,G5:783.99,A5:880.0,
+             B5:987.77,C6:1046.5,E6:1318.5,G6:1568.0};
+  let ctx=null, buffers={}, ready=false;
+  let on = (()=>{ try{ return localStorage.getItem('deficit.sound') !== 'off'; }
+                  catch(e){ return true; } })();
+
+  let lfsr = 1;
+  const noise = () => { lfsr ^= (lfsr<<13)&0x7FFF; lfsr ^= (lfsr>>9);
+                        lfsr ^= (lfsr<<7)&0x7FFF; return (lfsr&1)?1:-1; };
+  const square = (f,t,duty) => (((t*f)%1) < duty) ? 1 : -1;
+  const tri = (f,t) => 4*Math.abs(((t*f)%1)-0.5)-1;
+  const env = (i,n,a=0.01,r=0.35)=>{ const A=Math.floor(n*a), R=Math.floor(n*r);
+    if(i<A) return i/Math.max(A,1);
+    if(i>n-R) return Math.max(0,(n-i)/Math.max(R,1));
+    return 1; };
+
+  function tone(freq, ms, wave='square', duty=0.5, vol=0.35, bend=0){
+    const sr=ctx.sampleRate, n=Math.floor(sr*ms/1000), out=new Float32Array(n);
+    for(let i=0;i<n;i++){
+      const t=i/sr, f=freq*(1+bend*i/n);
+      const v = wave==='square' ? square(f,t,duty) : wave==='tri' ? tri(f,t) : noise();
+      out[i]=v*env(i,n)*vol;
+    }
+    return out;
+  }
+  const sil = ms => new Float32Array(Math.floor(ctx.sampleRate*ms/1000));
+  const seq = (...p)=>{ const n=p.reduce((a,x)=>a+x.length,0), o=new Float32Array(n);
+    let k=0; for(const x of p){ o.set(x,k); k+=x.length; } return o; };
+  const mix = (...L)=>{ const n=Math.max(...L.map(x=>x.length)), o=new Float32Array(n);
+    for(const x of L) for(let i=0;i<x.length;i++) o[i]=Math.max(-1,Math.min(1,o[i]+x[i]));
+    return o; };
+
+  /* the same table as chip.py, note for note */
+  const RECIPE = {
+    tap:       ()=> tone(N.A5,25,'square',0.25,0.16),
+    select:    ()=> seq(tone(N.E5,28,'square',0.5,0.22), tone(N.A5,40,'square',0.5,0.22)),
+    log:       ()=> seq(tone(N.C6,30,'square',0.25,0.26), tone(N.E6,55,'square',0.25,0.24,0.02)),
+    promote:   ()=> seq(tone(N.C5,55,'square',0.5,0.24), tone(N.E5,55,'square',0.5,0.24),
+                        tone(N.G5,55,'square',0.5,0.24), tone(N.C6,110,'square',0.5,0.26)),
+    complete:  ()=> mix(seq(tone(N.G5,90,'square',0.5,0.22), tone(N.C6,90,'square',0.5,0.22),
+                            tone(N.E6,90,'square',0.5,0.22), tone(N.G6,220,'square',0.5,0.26)),
+                        seq(tone(N.C3,180,'tri',0.5,0.30), tone(N.G4,180,'tri',0.5,0.22),
+                            tone(N.C4,230,'tri',0.5,0.26))),
+    rest_done: ()=> seq(tone(N.A5,70,'square',0.5,0.26), sil(60), tone(N.A5,70,'square',0.5,0.26)),
+    refuse:    ()=> seq(tone(N.A4,60,'square',0.125,0.20), tone(N.F4,90,'square',0.125,0.18,-0.15)),
+    toggle_on: ()=> seq(tone(N.D5,22,'square',0.25,0.18), tone(N.A5,32,'square',0.25,0.18)),
+    toggle_off:()=> seq(tone(N.A5,22,'square',0.25,0.16), tone(N.D5,32,'square',0.25,0.16)),
+    unlock:    ()=> seq(tone(N.C5,45,'square',0.5,0.22), tone(N.G5,45,'square',0.5,0.22),
+                        tone(N.C6,45,'square',0.5,0.22), tone(N.E6,160,'square',0.5,0.26)),
+    poke:      ()=> tone(N.G5,30,'square',0.75,0.20,0.35),
+    boot:      ()=> mix(seq(tone(N.C5,70,'square',0.25,0.18), tone(N.G5,70,'square',0.25,0.18),
+                            tone(N.C6,150,'square',0.25,0.20)),
+                        seq(sil(40), tone(N.C4,200,'tri',0.5,0.22))),
+    drum:      ()=> { const t=tone(0,18,'noise',0.5,1.0); for(let i=0;i<t.length;i++) t[i]*=0.10; return t; },
+  };
+
+  function build(){
+    if(ready) return true;
+    try{
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return false;
+      ctx = new AC();
+      for(const k in RECIPE){
+        const d = RECIPE[k]();
+        const b = ctx.createBuffer(1, d.length, ctx.sampleRate);
+        b.getChannelData(0).set(d);
+        buffers[k] = b;
+      }
+      ready = true;
+    }catch(e){ ready = false; }
+    return ready;
+  }
+
+  function fire(cue){
+    if(!on || !ready || !buffers[cue]) return;
+    try{
+      if(ctx.state === 'suspended') ctx.resume();
+      const src = ctx.createBufferSource(), g = ctx.createGain();
+      src.buffer = buffers[cue]; g.gain.value = 0.9;
+      src.connect(g); g.connect(ctx.destination); src.start();
+    }catch(e){}
+  }
+
+  /* The first gesture is the power-on: build, resume, and boot. */
+  let armed = false;
+  function arm(){
+    if(armed) return; armed = true;
+    if(build() && on){ try{ ctx.resume(); }catch(e){} fire('boot'); }
+    ['pointerdown','keydown','touchstart','wheel'].forEach(ev =>
+      window.removeEventListener(ev, arm, true));
+  }
+  ['pointerdown','keydown','touchstart','wheel'].forEach(ev =>
+    window.addEventListener(ev, arm, {capture:true, passive:true}));
+
+  return {
+    fire,
+    get on(){ return on; },
+    set(v){
+      // The off cue has to sound while sound is still on, or it gates itself.
+      if(!v) fire('toggle_off');
+      on = v;
+      try{ localStorage.setItem('deficit.sound', v ? 'on' : 'off'); }catch(e){}
+      if(v && build()){ try{ ctx.resume(); }catch(e){} fire('toggle_on'); }
+    },
+    cues: Object.keys(RECIPE),
+  };
+})();
+
+
+/* -- The console, wired to the page -------------------------------
+   Cues are chosen the way the app chooses them, not sprinkled: a nav
+   tick is `tap`, choosing a day is `drum`, committing something is
+   `log`, a refusal is `refuse`. Same vocabulary, same meanings. */
+(function(){
+  const snd = document.getElementById('snd');
+  if(snd){
+    snd.setAttribute('aria-pressed', Sound.on ? 'true' : 'false');
+    snd.addEventListener('click', ()=>{
+      const next = !Sound.on;
+      Sound.set(next);
+      snd.setAttribute('aria-pressed', next ? 'true' : 'false');
+    });
+  }
+  document.querySelectorAll('.cue').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      Sound.fire(b.dataset.cue);
+      b.classList.add('hit'); setTimeout(()=>b.classList.remove('hit'), 180);
+    });
+  });
+  document.querySelectorAll('.navlinks a, .flinks a').forEach(a=>
+    a.addEventListener('click', ()=> Sound.fire('tap')));
+  document.querySelectorAll('.btn, .cta').forEach(a=>
+    a.addEventListener('click', ()=> Sound.fire('unlock')));
+  const hello = document.querySelector('.hello');
+  if(hello) hello.addEventListener('click', ()=> Sound.fire('poke'));
+})();
+
+/* -- The ticker and the rail --------------------------------------
+   The app's chassis carries a ticker that reads the day's status. Here
+   it reads the section you are in, and a hairline rail under the bar
+   tracks how far down you are -- the deck indicator, stretched. */
+(function(){
+  const ticker = document.getElementById('ticker');
+  const rail = document.getElementById('rail');
+  if(!ticker && !rail) return;
+  const secs = [...document.querySelectorAll('section[id]')].map(el=>({
+    el, name: (el.querySelector('.eyebrow')?.textContent || el.id)
+                .replace(/^\s*\d+\s*[\u2013\u2014-]\s*/,'').trim()
+  }));
+  let last = '';
+  function update(){
+    if(rail){
+      const h = document.documentElement.scrollHeight - innerHeight;
+      rail.style.width = (h > 0 ? Math.min(100, (scrollY / h) * 100) : 0) + '%';
+    }
+    if(ticker){
+      let cur = 'ready';
+      for(const s of secs){
+        if(s.el.getBoundingClientRect().top <= innerHeight * 0.35) cur = s.name;
+      }
+      if(cur !== last){ last = cur; ticker.textContent = cur; }
+    }
+  }
+  let q=false;
+  addEventListener('scroll', ()=>{
+    if(q) return; q=true;
+    const run=()=>{ q=false; update(); };
+    document.hidden ? setTimeout(run,0) : requestAnimationFrame(run);
+  }, {passive:true});
+  addEventListener('resize', update);
+  update();
+})();
+
 /* -- assets --------------------------------------------------- */
 const A = JSON.parse(document.getElementById('assets').textContent);
 const png = k => 'data:image/png;base64,' + A[k];
@@ -991,7 +1243,7 @@ DAYS.forEach((d,i)=>{
   el.innerHTML = `<div class="bb face"><div class="wd">${d.wd}</div>`+
                  `<div class="n">${d.n}</div><div class="bar"></div>`+
                  `<div class="k">${d.k}</div></div>`;
-  el.addEventListener('click',()=>{ if(!moved) centre(el); });
+  el.addEventListener('click',()=>{ if(!moved) { Sound.fire('drum'); centre(el); } });
   drum.appendChild(el);
 });
 const cells = [...drum.children];
@@ -1040,7 +1292,7 @@ window.addEventListener('resize',()=>requestAnimationFrame(turn));
 
 /* A horizontal strip is unusable with a mouse: there is no sideways wheel, and the
    page swallows the gesture. So it takes a drag, the vertical wheel, and the arrow
-   keys — the app gets a thumb, the desktop needs all three. */
+   keys - the app gets a thumb, the desktop needs all three. */
 let down=false, startX=0, startL=0, moved=false;
 drum.addEventListener('pointerdown', e=>{
   down=true; moved=false; startX=e.clientX; startL=drum.scrollLeft;
@@ -1237,10 +1489,12 @@ function draw(){
 }
 function tap(r){
   if(r.state==='done'||r.state==='inferred'){
+    Sound.fire('refuse');
     delete claimed[r.s.id]; sheet.classList.remove('on'); draw(); return;
   }
   const c=consequence(r);
-  if(c.weight==='neutral'){ commit(r,c); return; }
+  if(c.weight==='neutral'){ Sound.fire('log'); commit(r,c); return; }
+  Sound.fire('select');
   sheet.className='bb sheet on';
   sheet.innerHTML=
     `<div class="head" style="color:${c.weight==='costly'?'var(--alert)':'var(--flag)'}">${c.head}</div>`+
@@ -1250,8 +1504,8 @@ function tap(r){
     `<div class="acts"><button id="no">cancel</button>`+
     `<button id="yes" class="go ${c.weight==='costly'?'costly':''}">`+
     `${c.fx.some(f=>f.s.includes('mis-tap'))?'log it anyway':'log it'}</button></div>`;
-  sheet.querySelector('#no').onclick=()=>sheet.classList.remove('on');
-  sheet.querySelector('#yes').onclick=()=>commit(r,c);
+  sheet.querySelector('#no').onclick=()=>{ Sound.fire('refuse'); sheet.classList.remove('on'); };
+  sheet.querySelector('#yes').onclick=()=>{ Sound.fire('log'); commit(r,c); };
   sheet.scrollIntoView({block:'nearest',behavior:'smooth'});
 }
 function commit(r,c){
@@ -1262,11 +1516,13 @@ document.getElementById('time').addEventListener('input',e=>{
   now=+e.target.value; sheet.classList.remove('on'); draw();
 });
 document.getElementById('latewake').addEventListener('click',()=>{
+  Sound.fire('promote');
   claimed={wake:430};
   if(now<440){ now=440; document.getElementById('time').value=440; }
   sheet.classList.remove('on'); draw();
 });
 document.getElementById('reset').addEventListener('click',()=>{
+  Sound.fire('toggle_off');
   claimed={}; now=1060; document.getElementById('time').value=1060;
   sheet.classList.remove('on'); draw();
 });
