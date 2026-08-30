@@ -442,10 +442,29 @@ td{padding:14px 14px 14px 0; border-top:1px solid rgba(58,53,80,.38);
 td.k{font-size:10px; letter-spacing:.1em; text-transform:uppercase;
   color:var(--accent); white-space:nowrap;}
 
-/* -- Footer ---------------------------------------------------- */
-footer{padding:52px 0 34px; border-top:1px solid rgba(58,53,80,.42);}
-.foot{display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; align-items:center;}
-.foot span{font-size:9px; letter-spacing:.17em; color:var(--muted); text-transform:uppercase;}
+/* -- Footer ---------------------------------------------------
+   Structured like the huh site's: wordmark, a row of links, then the
+   credit line -- but drawn in this language rather than that one. The
+   "say hello" is the same LinkedIn link the app puts in Settings. */
+footer{padding:56px 0 38px; border-top:1px solid rgba(58,53,80,.42);}
+.foot{display:flex; align-items:center; gap:20px; flex-wrap:wrap;}
+.fmark{display:flex; align-items:center; gap:11px;}
+.fmark img{width:24px; height:24px; image-rendering:pixelated;}
+.fmark span{font-size:12px; letter-spacing:.2em; color:var(--accent);}
+.flinks{margin-left:auto; display:flex; gap:18px; flex-wrap:wrap;}
+.flinks a{font-size:9.5px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--muted); border:0;}
+.flinks a:hover{color:var(--pale);}
+.fhello{display:flex; justify-content:center; margin-top:38px;}
+.hello{--fill:var(--card); --bw:2px; background:rgba(185,140,255,.45);
+  padding:0 26px; height:46px; display:inline-flex;
+  align-items:center; font-size:11px; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--accent); border:0;
+  transition:background .16s ease, color .16s ease;}
+.hello:hover{background:var(--accent); color:var(--bright);}
+.hello .wave{margin-right:10px; color:var(--flag);}
+.fcredit{text-align:center; margin-top:26px; font-size:9.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--muted);}
 .heart{color:var(--accent);}
 
 /* -- The app's own art, run the way the app runs it -----------------
@@ -890,10 +909,20 @@ body.anim .warp.in{opacity:1; transform:none; filter:none;}
 
 <footer>
   <div class="foot">
-    <span>deficit &middot; local-only training protocol</span>
-    <span><a href="https://github.com/getnsh/deficit-app" style="border:0;color:var(--muted)">github</a>
-      &nbsp;&middot;&nbsp; made by getnsh with <span class="heart">&hearts;</span></span>
+    <div class="fmark"><img id="footicon" alt=""><span>DEFICIT</span></div>
+    <div class="flinks">
+      <a href="https://github.com/getnsh/deficit-app">source</a>
+      <a href="https://github.com/getnsh/deficit-app/releases/latest">releases</a>
+      <a href="#safe">privacy</a>
+      <a href="#limits">what it is not</a>
+    </div>
   </div>
+  <div class="fhello">
+    <a class="bb hello" href="https://www.linkedin.com/in/getnsh/"
+       target="_blank" rel="noopener noreferrer">
+      <span class="wave" aria-hidden="true">&gt;</span>say hello</a>
+  </div>
+  <div class="fcredit">made by getnsh with <span class="heart">&hearts;</span></div>
 </footer>
 </div>
 
@@ -925,7 +954,7 @@ body.anim .warp.in{opacity:1; transform:none; filter:none;}
 /* -- assets --------------------------------------------------- */
 const A = JSON.parse(document.getElementById('assets').textContent);
 const png = k => 'data:image/png;base64,' + A[k];
-navicon.src = heroicon.src = png('icon');
+navicon.src = heroicon.src = footicon.src = png('icon');
 
 /* ===============================================================
    THE DRUM &mdash; DayStrip.swift's scrollTransition, in CSS.
