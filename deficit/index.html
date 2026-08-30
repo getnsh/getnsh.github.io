@@ -272,6 +272,13 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--ok); outline-offset
 .prow .s.done{color:var(--ok);} .prow .s.now{color:var(--accent);} .prow .s.open{color:var(--flag);}
 .prow .s.blk,.prow .s.ah,.prow .s.vd{color:var(--muted);}
 
+.pstat{--fill:var(--panel); --bw:calc(2px * var(--k)); padding:calc(3px * var(--k)) calc(9px * var(--k)); flex:none;}
+.pstat div{display:flex; align-items:baseline; gap:calc(8px * var(--k));
+  padding:calc(6px * var(--k)) 0; border-bottom:1px solid rgba(58,53,80,.34);}
+.pstat div:last-child{border-bottom:0;}
+.pstat .k{font-size:calc(5px * var(--k)); letter-spacing:.14em; color:var(--accent); min-width:calc(36px * var(--k));}
+.pstat .v{font-size:calc(8px * var(--k)); color:var(--bright);}
+.pstat .u{font-size:calc(4.6px * var(--k)); letter-spacing:.1em; color:var(--muted);}
 .psheet{position:absolute; left:0; right:0; bottom:0; --fill:var(--panel);
   --bw:calc(2px * var(--k)); padding:calc(11px * var(--k)); z-index:2;}
 .psheet .hd{font-size:calc(5.6px * var(--k)); letter-spacing:.16em; color:var(--flag);}
@@ -551,18 +558,32 @@ body.anim .warp.in{opacity:1; transform:none; filter:none;}
       <div class="bb chip" style="--i:3">161 tests</div>
     </div>
   </div>
-  <div style="display:flex;justify-content:center"><div class="bb phone" style="--k:1.08" role="img" aria-label="The DEFICIT today screen"><div class="scr"><div class="pbar"><span class="nm">DEFICIT</span><span class="tk">not much logged lately</span><span class="mn">&equiv;</span></div><div class="pbody">
+  <div style="display:flex;justify-content:center"><div class="bb phone" style="--k:1.08" role="img" aria-label="The DEFICIT today screen on a lifting day">
+<div class="scr"><div class="pbar"><span class="nm">DEFICIT</span><span class="tk">11 banked</span><span class="mn">&equiv;</span></div>
+  <div class="pbody">
     <div class="bb pcard">
-      <div class="ey">day 1 &middot; logged</div><div class="ttl">CARDIO</div>
-      <div class="sub">45 min logged</div>
-      <div class="bb pgo done">adjust <span>&rsaquo;</span></div>
-    </div><div class="pdrum"><div class="bb pday"><div class="w">thu</div><div class="d">27</div><div class="b"></div><div class="k">rest</div></div><div class="bb pday"><div class="w">fri</div><div class="d">28</div><div class="b"></div><div class="k">rest</div></div><div class="bb pday now"><div class="w">sat</div><div class="d">29</div><div class="b"></div><div class="k">cardio</div></div><div class="bb pday"><div class="w">sun</div><div class="d">30</div><div class="b"></div><div class="k">rest</div></div><div class="bb pday"><div class="w">mon</div><div class="d">31</div><div class="b"></div><div class="k">push</div></div></div>
-    <div class="bb pnote"><div class="h">CARDIO</div>
-      <div class="d">sat &middot; 2026-08-29</div>
-      <div class="b">zone 2. the walk is worth more than the lifting session.</div></div>
-    <div class="pgreet">EVENING, GEETANSH</div>
-    <div class="psub">first session is whenever you are ready.</div>
-    <div class="pstage"><i class="sprite walk" style="transform:scale(.5)"></i></div>
+      <div class="ey">day 12 &middot; session due</div>
+      <div class="ttl">PUSH</div>
+      <div class="sub">4 exercises &middot; 12 sets</div>
+      <div class="bb pgo live">start session <span>&rsaquo;</span></div>
+    </div>
+    <div class="pdrum">
+      <div class="bb pday"><div class="w">sat</div><div class="d">29</div><div class="b" style="background:var(--ok)"></div><div class="k">cardio</div></div>
+      <div class="bb pday"><div class="w">sun</div><div class="d">30</div><div class="b"></div><div class="k">rest</div></div>
+      <div class="bb pday now"><div class="w">mon</div><div class="d">31</div><div class="b" style="background:var(--accent)"></div><div class="k">push</div></div>
+      <div class="bb pday"><div class="w">tue</div><div class="d">01</div><div class="b"></div><div class="k">pull</div></div>
+      <div class="bb pday"><div class="w">wed</div><div class="d">02</div><div class="b"></div><div class="k">legs</div></div>
+    </div>
+    <div class="bb pnote"><div class="h">PUSH</div>
+      <div class="d">mon &middot; 2026-08-31</div>
+      <div class="b">incline dumbbell press &middot; machine chest press &middot; shoulder press &middot; triceps pushdown</div></div>
+    <div class="pgreet">MORNING, GEETANSH</div>
+    <div class="psub">weigh in first. it never gates the session.</div>
+    <div class="bb pstat" style="margin-top:auto">
+      <div><span class="k">banked</span><span class="v">11</span><span class="u">sessions</span></div>
+      <div><span class="k">trend</span><span class="v">203.4</span><span class="u">falling &middot; 1.6 lb / wk</span></div>
+      <div><span class="k">protein</span><span class="v">40</span><span class="u">of 150 g</span></div>
+    </div>
   </div><div class="pdeck"><b class="on">today</b><b>fuel</b><b>body</b><b>trend</b><b>rules</b></div></div></div></div>
 </header>
 
