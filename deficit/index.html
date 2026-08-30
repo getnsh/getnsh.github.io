@@ -785,7 +785,13 @@ DAYS.forEach((d,i)=>{
 const cells = [...drum.children];
 
 function centre(el, behavior='smooth'){
-  el.scrollIntoView({inline:'center', block:'nearest', behavior});
+  // scrollBy on the strip itself, never scrollIntoView: that walks up and scrolls
+  // EVERY ancestor scroller to bring the element into view -- including the document
+  // -- so centring today on load dragged the whole page down to the calendar.
+  // Measuring with rects rather than offsetLeft also sidesteps offsetParent entirely.
+  const box = drum.getBoundingClientRect();
+  const r = el.getBoundingClientRect();
+  drum.scrollBy({left: (r.left + r.width/2) - (box.left + box.width/2), behavior});
 }
 function turn(){
   const box = drum.getBoundingClientRect(), mid = box.left + box.width/2;
