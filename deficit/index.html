@@ -184,13 +184,24 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--ok); outline-offset
   transition:opacity .2s ease;}
 @media(max-width:880px){ .ticker{display:none;} }
 
-/* the sound switch, drawn as the app's own toggle */
-.snd{width:34px; height:22px; padding:0; border:2px solid var(--outline);
-  background:var(--card); cursor:pointer; position:relative; flex:none;}
-.snd span{position:absolute; top:2px; left:2px; width:14px; height:14px;
-  background:var(--muted); transition:left .18s var(--warp), background .18s ease;}
-.snd[aria-pressed="true"]{border-color:var(--accent); background:rgba(185,140,255,.18);}
-.snd[aria-pressed="true"] span{left:14px; background:var(--accent);}
+/* The sound switch. A pixel speaker rather than an emoji, for the same reason
+   the app draws its own heart: a glossy full-colour glyph would be the only one
+   on the page and would sit badly next to Silkscreen. Drawn on a 11x7 grid with
+   crispEdges so it stays hard at any density, and labelled, because a bare
+   switch in a nav bar tells you nothing about what it switches. */
+.snd{display:flex; align-items:center; gap:8px; padding:7px 11px;
+  border:2px solid var(--outline); background:var(--card); cursor:pointer;
+  flex:none; color:var(--muted); transition:color .16s ease, border-color .16s ease,
+  background .16s ease;}
+.snd svg{width:17px; height:11px; fill:currentColor; display:block;}
+.snd b{font-weight:400; font-size:8.5px; letter-spacing:.16em; text-transform:uppercase;}
+.snd .wv{display:none;} .snd .xx{display:block;}
+.snd[aria-pressed="true"]{color:var(--accent); border-color:var(--accent);
+  background:rgba(185,140,255,.16);}
+.snd[aria-pressed="true"] .wv{display:block;}
+.snd[aria-pressed="true"] .xx{display:none;}
+.snd:hover{color:var(--bright); border-color:var(--accent);}
+@media(max-width:880px){ .snd b{display:none;} .snd{padding:7px 9px;} }
 
 /* a hairline progress rail, the deck indicator stretched across the page */
 .rail{position:absolute; left:0; bottom:-1px; height:2px; background:var(--accent);
@@ -572,8 +583,16 @@ body.anim .warp.in{opacity:1; transform:none; filter:none;}
       <a href="#engine" class="hide">the engine</a>
       <a href="#protocol" class="hide">protocol</a>
       <a href="#safe" class="hide">privacy</a>
-      <button id="snd" class="snd" aria-pressed="true"
-              aria-label="Toggle sound"><span></span></button>
+      <button id="snd" class="snd" aria-pressed="true" aria-label="Sound">
+        <svg viewBox="0 0 11 7" shape-rendering="crispEdges" aria-hidden="true" focusable="false">
+          <rect x="0" y="2" width="2" height="3"/><rect x="2" y="1" width="1" height="5"/>
+          <rect x="3" y="0" width="1" height="7"/>
+          <g class="wv"><rect x="5" y="2" width="1" height="3"/>
+                        <rect x="7" y="1" width="1" height="5"/></g>
+          <g class="xx"><rect x="5" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/>
+                        <rect x="6" y="3" width="1" height="1"/>
+                        <rect x="5" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/></g>
+        </svg><b>sound</b></button>
       <a href="#get" class="bb cta">get it</a>
     </div>
     <div class="rail" id="rail"></div>
